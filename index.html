@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Star Game</title>
+    <style>
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
+        svg { border: 1px solid #000; background-color: #001f3f; }
+    </style>
+</head>
+<body>
+    <svg width="400" height="400" viewBox="0 0 400 400">
+        <rect id="basket" x="175" y="350" width="50" height="20" fill="brown" />
+        <circle id="star" cx="200" cy="0" r="10" fill="yellow" />
+        <text id="score" x="10" y="30" font-family="Arial" font-size="20" fill="white">Score: 0</text>
+    </svg>
+
+    <script>
+        const svg = document.querySelector('svg');
+        const basket = document.getElementById('basket');
+        const star = document.getElementById('star');
+        const scoreText = document.getElementById('score');
+        let score = 0;
+
+        function moveStar() {
+            let y = parseFloat(star.getAttribute('cy'));
+            y += 2;
+            star.setAttribute('cy', y);
+
+            if (y >= 400) {
+                resetStar();
+            }
+
+            const basketX = parseFloat(basket.getAttribute('x'));
+            const starX = parseFloat(star.getAttribute('cx'));
+
+            if (y >= 330 && y <= 350 && starX >= basketX && starX <= basketX + 50) {
+                score++;
+                scoreText.textContent = `Score: ${score}`;
+                resetStar();
+            }
+        }
+
+        function resetStar() {
+            star.setAttribute('cy', '0');
+            star.setAttribute('cx', Math.random() * 380 + 10);
+        }
+
+        function moveBasket(e) {
+            let x = e.clientX - svg.getBoundingClientRect().left - 25;
+            x = Math.max(0, Math.min(x, 350));
+            basket.setAttribute('x', x);
+        }
+
+        svg.addEventListener('mousemove', moveBasket);
+        setInterval(moveStar, 20);
+    </script>
+</body>
+</html>
